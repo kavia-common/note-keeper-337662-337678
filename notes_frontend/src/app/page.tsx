@@ -177,23 +177,23 @@ export default function Home() {
 
   return (
     <div className="app-shell">
-      <div className="mx-auto max-w-[1200px] px-4 py-6">
+      <div className="mx-auto max-w-[1200px] px-4 py-6 sm:py-10">
         {/* Header */}
-        <header className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <header className="card card-elevated flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
           <div className="flex items-baseline gap-3">
-            <h1 className="text-xl font-semibold tracking-tight text-slate-900">
+            <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
               Notes
             </h1>
-            <span className="text-sm text-slate-500">
+            <span className="rounded-full border border-slate-200 bg-white/70 px-2 py-0.5 text-sm text-slate-500 shadow-sm">
               {loadState.kind === "ready" ? notes.length : "—"} total
             </span>
           </div>
 
           <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
-            <div className="relative w-full sm:w-[360px]">
+            <div className="relative w-full sm:w-[380px]">
               <IconSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
-                className="input pl-9 pr-10"
+                className="input pl-9 pr-12"
                 placeholder="Search notes…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -202,33 +202,35 @@ export default function Home() {
               {searching ? (
                 <IconSpinner className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-slate-400" />
               ) : (
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">
+                <span className="absolute right-3 top-1/2 hidden -translate-y-1/2 text-xs text-slate-400 sm:inline">
                   <span className="kbd">Ctrl</span> <span className="kbd">K</span>
                 </span>
               )}
             </div>
 
             <button className="btn btn-primary w-full sm:w-auto" onClick={onCreate}>
-              <IconPlus className="h-4 w-4 text-blue-600" />
+              <IconPlus className="h-4 w-4 text-blue-700" />
               New note
             </button>
           </div>
         </header>
 
         {/* Content */}
-        <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[360px_1fr]">
+        <div className="mt-5 grid grid-cols-1 gap-4 lg:mt-6 lg:grid-cols-[380px_1fr]">
           {/* Sidebar */}
           <aside className="card overflow-hidden">
-            <div className="border-b border-slate-200 px-4 py-3">
+            <div className="border-b border-slate-200/80 px-4 py-3 sm:px-5">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-slate-900">Your notes</h2>
+                <h2 className="text-sm font-semibold tracking-tight text-slate-900">
+                  Your notes
+                </h2>
                 <span className="text-xs text-slate-500">
                   {loadState.kind === "loading" ? "Loading…" : null}
                 </span>
               </div>
             </div>
 
-            <div className="max-h-[65vh] overflow-auto p-2">
+            <div className="max-h-[65vh] overflow-auto p-2 sm:p-3">
               {loadState.kind === "loading" ? (
                 <div className="p-3 text-sm text-slate-600">
                   <div className="flex items-center gap-2">
@@ -255,33 +257,34 @@ export default function Home() {
                     }
                     action={
                       <button className="btn btn-primary" onClick={onCreate}>
-                        <IconPlus className="h-4 w-4 text-blue-600" />
+                        <IconPlus className="h-4 w-4 text-blue-700" />
                         Create a note
                       </button>
                     }
                   />
                 </div>
               ) : (
-                <ul className="space-y-1">
+                <ul className="space-y-1.5">
                   {notes.map((n) => {
                     const active = n.id === selectedId;
                     return (
                       <li key={n.id}>
                         <button
                           className={[
-                            "w-full rounded-xl border px-3 py-2 text-left transition",
+                            "note-item w-full border px-3 py-2.5 text-left",
+                            "focus-visible:shadow-[0_0_0_4px_rgba(59,130,246,0.25)]",
                             active
-                              ? "border-blue-200 bg-blue-50"
-                              : "border-transparent hover:border-slate-200 hover:bg-slate-50",
+                              ? "note-item-active"
+                              : "border-transparent hover:border-slate-200/80 hover:bg-white/60",
                           ].join(" ")}
                           onClick={() => setSelectedId(n.id)}
                         >
-                          <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
-                              <div className="truncate text-sm font-semibold text-slate-900">
+                              <div className="truncate text-sm font-semibold tracking-tight text-slate-900">
                                 {n.title?.trim() ? n.title : "Untitled"}
                               </div>
-                              <div className="mt-0.5 line-clamp-1 text-xs text-slate-600">
+                              <div className="mt-0.5 line-clamp-1 text-xs leading-relaxed text-slate-600">
                                 {n.content?.trim() ? n.content : "No content"}
                               </div>
                             </div>
@@ -299,7 +302,7 @@ export default function Home() {
           </aside>
 
           {/* Main editor */}
-          <main className="card p-4">
+          <main className="card p-4 sm:p-5">
             {loadState.kind === "error" ? (
               <ErrorPanel
                 message={loadState.error.message}
@@ -312,14 +315,14 @@ export default function Home() {
                 description="Choose a note from the list, or create a new one."
                 action={
                   <button className="btn btn-primary" onClick={onCreate}>
-                    <IconPlus className="h-4 w-4 text-blue-600" />
+                    <IconPlus className="h-4 w-4 text-blue-700" />
                     New note
                   </button>
                 }
               />
             ) : (
-              <div className="flex h-full flex-col gap-3">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex h-full flex-col gap-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0">
                     <div className="text-xs text-slate-500">
                       {selectedNote.updated_at || selectedNote.created_at ? (
@@ -358,9 +361,22 @@ export default function Home() {
                 </div>
 
                 {saveState.kind === "error" ? (
-                  <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                  <div
+                    className="rounded-xl border border-red-200 bg-red-50/80 p-3 text-sm text-red-700"
+                    role="alert"
+                  >
                     <div className="font-semibold">Save failed</div>
                     <div className="mt-1">{saveState.error.message}</div>
+                  </div>
+                ) : saveState.kind === "saved" ? (
+                  <div
+                    className="rounded-xl border border-slate-200 bg-white/60 p-3 text-sm text-slate-700"
+                    role="status"
+                  >
+                    <span className="font-semibold">Saved.</span>{" "}
+                    <span className="text-slate-600">
+                      Your changes are up to date.
+                    </span>
                   </div>
                 ) : null}
 
@@ -385,7 +401,7 @@ export default function Home() {
                       Content
                     </label>
                     <textarea
-                      className="input mt-1 min-h-[360px] resize-y leading-relaxed"
+                      className="input mt-1 min-h-[360px] resize-y"
                       value={draftContent}
                       onChange={(e) => {
                         setDraftContent(e.target.value);
@@ -393,20 +409,16 @@ export default function Home() {
                       }}
                       placeholder="Write something…"
                     />
-                    <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
+                    <div className="mt-2 flex flex-col gap-1 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         {draftDirty ? (
-                          <span className="text-slate-600">
-                            Unsaved changes
-                          </span>
+                          <span className="text-slate-700">Unsaved changes</span>
                         ) : (
                           <span className="text-slate-400">Saved</span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span>
-                          {draftContent.length.toLocaleString()} chars
-                        </span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span>{draftContent.length.toLocaleString()} chars</span>
                         <span className="text-slate-300">•</span>
                         <span className="text-slate-400">
                           Tip: keep notes short and searchable
@@ -420,7 +432,7 @@ export default function Home() {
           </main>
         </div>
 
-        <footer className="mt-6 text-center text-xs text-slate-500">
+        <footer className="mt-8 text-center text-xs text-slate-500">
           Powered by a REST API. Configure{" "}
           <span className="font-mono">NEXT_PUBLIC_NOTES_API_BASE_URL</span> to
           point at <span className="font-mono">notes_backend</span>.

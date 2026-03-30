@@ -2,19 +2,36 @@
 
 /* App theme tokens (light modern; blue/cyan accents) */
 :root {
+  /* Surfaces */
   --bg: #f9fafb;
   --surface: #ffffff;
-  --text: #111827;
+  --surface-2: #f8fafc;
+  --text: #0f172a;
   --muted: #64748b;
-  --border: #e5e7eb;
+  --border: rgba(148, 163, 184, 0.35);
 
+  /* Accents */
   --primary: #3b82f6;
-  --success: #06b6d4;
+  --accent: #06b6d4;
   --danger: #ef4444;
 
-  --ring: rgba(59, 130, 246, 0.35);
+  /* Effects */
+  --ring: rgba(59, 130, 246, 0.28);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 10px 25px rgba(15, 23, 42, 0.08);
+  --shadow-ring: 0 0 0 4px var(--ring);
+
+  /* Radius */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
+/* Ensure consistent box model + smoother type rendering */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -30,83 +47,249 @@ body {
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Small utility layer (kept minimal; Tailwind used for most layout) */
+::selection {
+  background: rgba(59, 130, 246, 0.18);
+}
+
+/* Focus visibility: always provide an accessible focus ring */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  box-shadow: var(--shadow-ring);
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+/* Subtle scrollbars for overflow panes (best-effort, non-critical) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.28);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.38);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Shell background: premium soft gradients while staying very light */
 .app-shell {
   min-height: 100vh;
-  background: radial-gradient(1200px 600px at 20% 0%, rgba(59, 130, 246, 0.08), transparent),
-    radial-gradient(900px 500px at 80% 10%, rgba(6, 182, 212, 0.06), transparent),
+  background: radial-gradient(
+      1200px 650px at 18% -10%,
+      rgba(59, 130, 246, 0.12),
+      transparent 60%
+    ),
+    radial-gradient(
+      950px 550px at 85% 0%,
+      rgba(6, 182, 212, 0.10),
+      transparent 55%
+    ),
+    radial-gradient(
+      700px 450px at 50% 110%,
+      rgba(59, 130, 246, 0.06),
+      transparent 55%
+    ),
     var(--bg);
 }
 
+/* Card: slightly richer depth + better border treatment */
 .card {
-  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 96%, rgba(59, 130, 246, 0.5));
   border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 1px 0 rgba(17, 24, 39, 0.02);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
+/* A "raised" card variant used in key surfaces when needed */
+.card-elevated {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 10px;
-  padding: 0.55rem 0.75rem;
-  font-size: 0.9rem;
-  font-weight: 600;
+
+  border-radius: var(--radius-sm);
+  padding: 0.58rem 0.85rem;
+  font-size: 0.92rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
   color: var(--text);
+
   cursor: pointer;
   user-select: none;
+
+  transition:
+    transform 120ms ease,
+    box-shadow 140ms ease,
+    background 140ms ease,
+    border-color 140ms ease,
+    opacity 140ms ease;
 }
 
-.btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px var(--ring);
+.btn:hover {
+  border-color: rgba(148, 163, 184, 0.55);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
 }
 
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Primary button: gradient tint with crisp border */
 .btn-primary {
-  border-color: rgba(59, 130, 246, 0.35);
-  background: linear-gradient(180deg, rgba(59, 130, 246, 0.14), rgba(59, 130, 246, 0.06));
+  border-color: rgba(59, 130, 246, 0.45);
+  background: linear-gradient(
+      180deg,
+      rgba(59, 130, 246, 0.18),
+      rgba(59, 130, 246, 0.06)
+    ),
+    linear-gradient(180deg, #ffffff, #f8fafc);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(180deg, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0.08));
+  border-color: rgba(59, 130, 246, 0.60);
+  background: linear-gradient(
+      180deg,
+      rgba(59, 130, 246, 0.22),
+      rgba(59, 130, 246, 0.08)
+    ),
+    linear-gradient(180deg, #ffffff, #f8fafc);
 }
 
+/* Danger button */
 .btn-danger {
-  border-color: rgba(239, 68, 68, 0.35);
-  background: linear-gradient(180deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.05));
+  border-color: rgba(239, 68, 68, 0.40);
+  background: linear-gradient(
+      180deg,
+      rgba(239, 68, 68, 0.14),
+      rgba(239, 68, 68, 0.05)
+    ),
+    linear-gradient(180deg, #ffffff, #f8fafc);
 }
 
+.btn-danger:hover {
+  border-color: rgba(239, 68, 68, 0.55);
+}
+
+/* Inputs */
 .input {
   width: 100%;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: var(--surface);
-  padding: 0.6rem 0.75rem;
+  background: linear-gradient(180deg, #ffffff, #fbfdff);
+  padding: 0.65rem 0.8rem;
   color: var(--text);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+
+  transition:
+    box-shadow 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
 }
 
-.input:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px var(--ring);
-  border-color: rgba(59, 130, 246, 0.5);
+.input:hover {
+  border-color: rgba(148, 163, 184, 0.55);
 }
 
+.input:focus-visible {
+  box-shadow: var(--shadow-ring), 0 10px 25px rgba(59, 130, 246, 0.09);
+  border-color: rgba(59, 130, 246, 0.60);
+}
+
+textarea.input {
+  line-height: 1.6;
+}
+
+/* Muted text */
 .muted {
   color: var(--muted);
 }
 
+/* Kbd pills */
 .kbd {
-  border: 1px solid var(--border);
-  background: #f8fafc;
-  padding: 0.1rem 0.35rem;
-  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: linear-gradient(180deg, #ffffff, #f1f5f9);
+  padding: 0.12rem 0.38rem;
+  border-radius: 8px;
   font-size: 0.75rem;
   color: var(--muted);
+}
+
+/* Subtle separators (optional utility) */
+.hr {
+  height: 1px;
+  background: var(--border);
+}
+
+/* Premium "soft" list item hover for sidebar buttons */
+.note-item {
+  position: relative;
+  border-radius: 14px;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 120ms ease,
+    box-shadow 140ms ease;
+}
+
+.note-item:hover {
+  transform: translateY(-0.5px);
+}
+
+.note-item-active {
+  border-color: rgba(59, 130, 246, 0.40) !important;
+  background: linear-gradient(
+    180deg,
+    rgba(59, 130, 246, 0.14),
+    rgba(59, 130, 246, 0.06)
+  ) !important;
+}
+
+/* Small page-level animation polish (respect reduced motion) */
+@media (prefers-reduced-motion: no-preference) {
+  .card,
+  .btn,
+  .input,
+  .note-item {
+    will-change: transform;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .input,
+  .note-item {
+    transition: none !important;
+  }
 }

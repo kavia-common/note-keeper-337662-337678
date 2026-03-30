@@ -11,9 +11,13 @@ export function Panel({
 }) {
   return (
     <div className="card p-6">
-      <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+      <h2 className="text-lg font-semibold tracking-tight text-slate-900">
+        {title}
+      </h2>
       {description ? (
-        <p className="mt-1 text-sm text-slate-600">{description}</p>
+        <p className="mt-1 text-sm leading-relaxed text-slate-600">
+          {description}
+        </p>
       ) : null}
       {children ? <div className="mt-4">{children}</div> : null}
     </div>
@@ -35,8 +39,10 @@ export function ErrorPanel({
       description={message || "The request failed."}
     >
       {details ? (
-        <pre className="mt-3 max-h-48 overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
-          {typeof details === "string" ? details : JSON.stringify(details, null, 2)}
+        <pre className="mt-3 max-h-48 overflow-auto rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-xs leading-relaxed text-slate-700">
+          {typeof details === "string"
+            ? details
+            : JSON.stringify(details, null, 2)}
         </pre>
       ) : null}
       {onRetry ? (
